@@ -1,2 +1,2 @@
 # XORCIPHER
-A simple stream cipher program script.
+A simple stream cipher script.
