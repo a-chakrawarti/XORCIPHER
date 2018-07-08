@@ -1,4 +1,4 @@
-def bin(n):
+def dec2bin(n):
     a=n
     i=0
     b=n

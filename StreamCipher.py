@@ -1,118 +1,114 @@
 from operator import xor
 import string
-from binary import bin as ibin
+from binary import dec2bin
 import base64
 import random
 
 key = list()
 key_ascii = list()
 key_bool = list()
+ct_element = list()
+pt_element = list()
 
-cT_element = list()
-pT_element = list()
-
-
-def encrypt(plainText):
+def encrypt(plaintext):
     """Enter the message to be encrypted."""
     key_binary = list()
-    pT_binary = list()
-    cipherT = []
-    cipherText = []
-    cT_binary = list()
-    pT_len = len(plainText)
+    pt_binary = list()
+    ciphert = []
+    ciphertext = []
+    ct_binary = list()
+    pt_len = len(plaintext)
 
-    key = ''.join(random.choice(string.ascii_lowercase) for n in range(pT_len))  # Generation of Key
+    key = ''.join(random.choice(string.ascii_lowercase) for n in range(pt_len))  # Generation of Key
 
-    for i in plainText:
-        pT_ascii = ord(i)
-        pT_bool = ibin(pT_ascii)
-        pT_binary.append(pT_bool)
+    for i in plaintext:
+        pt_ascii = ord(i)
+        pt_bool = dec2bin(pt_ascii)
+        pt_binary.append(pt_bool)
     for i in key:
         key_ascii = ord(i)
-        key_bool = ibin(key_ascii)
+        key_bool = dec2bin(key_ascii)
         key_binary.append(key_bool)
 
-    for i in range(0, len(pT_binary)):
-        cT_list = list()
-        for j in range(0, len(pT_binary[i])):
-            cT_element = xor(int(pT_binary[i][j]), int(key_binary[i][j]))
-            cT_element = str(cT_element)
-            cT_list.append(cT_element)
-        cT_list = ''.join(cT_list)
-        cT_binary.append(cT_list)
-        del (cT_list)
+    for i in range(0, len(pt_binary)):
+        ct_list = list()
+        for j in range(0, len(pt_binary[i])):
+            ct_element = xor(int(pt_binary[i][j]), int(key_binary[i][j]))
+            ct_element = str(ct_element)
+            ct_list.append(ct_element)
+        ct_list = ''.join(ct_list)
+        ct_binary.append(ct_list)
+        del (ct_list)
 
-    for i in cT_binary:
+    for i in ct_binary:
         val = int(i, 2)
         char = chr(val)
-        cipherT.append(char)
-        cipherText = ''.join(cipherT)
+        ciphert.append(char)
+        ciphertext = ''.join(ciphert)
 
-    cipherText = cipherText.encode()
-    cipherText = base64.b64encode(cipherText)
-    cipherText = cipherText.decode()
+    ciphertext = ciphertext.encode()
+    ciphertext = base64.b64encode(ciphertext)
+    ciphertext = ciphertext.decode()
 
-    #print('PlainTEXT :', plainText)
     print('Key :', key)
-    print('Ciphertext :', cipherText)
+    print('Ciphertext :', ciphertext)
 
-    del (plainText, key, cipherText, pT_binary)
+    del (plaintext, key, ciphertext, pt_binary)
 
 
-def decrypt(key, cipherText):
+def decrypt(key, ciphertext):
     """Enter key and encrypted message"""
-    plainT = list()
+    plaint = list()
     key_binary = list()
-    cT_binary = list()
-    pT_binary = list()
+    ct_binary = list()
+    pt_binary = list()
 
     for i in key:
         key_ascii = ord(i)
-        key_bool = ibin(key_ascii)
+        key_bool = dec2bin(key_ascii)
         key_binary.append(key_bool)
 
-    #Conversion
-    cipherText = base64.b64decode(cipherText)
-    cipherText = cipherText.decode()
+    # Conversion of base64 into String
+    ciphertext = base64.b64decode(ciphertext)
+    ciphertext = ciphertext.decode()
 
-    for i in cipherText:
-        cT_ascii = ord(i)
-        cT_bool = ibin(cT_ascii)
-        cT_binary.append(cT_bool)
+    for i in ciphertext:
+        ct_ascii = ord(i)
+        ct_bool = dec2bin(ct_ascii)
+        ct_binary.append(ct_bool)
 
-    for i in range(0, len(cT_binary)):
-        pT_list = list()
-        for j in range(0, len(cT_binary[i])):
-            pT_element = xor(int(cT_binary[i][j]), int(key_binary[i][j]))
-            pT_element = str(pT_element)
-            pT_list.append(pT_element)
-        pT_list = ''.join(pT_list)
-        pT_binary.append(pT_list)
-        del (pT_list)
+    for i in range(0, len(ct_binary)):
+        pt_list = list()
+        for j in range(0, len(ct_binary[i])):
+            pt_element = xor(int(ct_binary[i][j]), int(key_binary[i][j]))
+            pt_element = str(pt_element)
+            pt_list.append(pt_element)
+        pt_list = ''.join(pt_list)
+        pt_binary.append(pt_list)
+        del pt_list
 
-    del cT_binary
+    del ct_binary
 
-    for i in pT_binary:
+    for i in pt_binary:
         val = int(i, 2)
         char = chr(val)
-        plainT.append(char)
-        plainText = ''.join(plainT)
+        plaint.append(char)
+        plaintext = ''.join(plaint)
 
-    print('Plaintext : ', plainText)
-
+    print('Plaintext :', plaintext)
 
 # Calls
 
-plainText = input("Enter the message : ")
-encrypt(plainText)
+plaintext = input("Enter the message : ")
+encrypt(plaintext)
 while True:
     choice = input('\nWould you like to decrypt any messages ? (Y/N) ')
     if choice == 'N' or choice == 'n':
         break
     elif choice == 'Y' or choice == 'y':
-        key = input("Enter key : ")
-        cipherText = input("Enter Ciphertext : ")
-        decrypt(key, cipherText)
+        key = input("Enter Key : ")
+        ciphertext = input("Enter Ciphertext : ")
+        decrypt(key, ciphertext)
         break
     else:
         print('Enter valid choice !\n')
